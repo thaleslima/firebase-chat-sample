@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTheme" parent="android:Theme.Material.Light">
+        <item name="android:colorPrimaryDark">@color/primary_01</item>
+        <item name="android:colorPrimary">@color/action_bar_01</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="android:actionModeBackground">@color/action_bar_01</item>
+        <item name="android:windowBackground">@color/background_app</item>
+    </style>
+
+    <style name="EditTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:textColor">#808080</item>
+    </style>
+</resources>
