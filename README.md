@@ -1,4 +1,4 @@
-![](/../master/images/firebase_logo.png?raw=true "firebase")
+![](/../master/images/firebase_logo2.png?raw=true "firebase")
 
 # Firebase Chat for Android
 :envelope: [Android] [Firebase] A simple chat application that built with Firebase on Android.
