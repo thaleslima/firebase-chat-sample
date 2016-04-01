@@ -1,7 +1,7 @@
 ![](/../master/images/firebase_logo2.png?raw=true "firebase")
 
 # Firebase Chat for Android
-:envelope: [Android] [Firebase] A simple chat application that built with Firebase on Android.
+:envelope: [Android] [Firebase] An example chat application built using the Firebase Android SDK.
 
 
 Screenshots app project
