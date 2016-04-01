@@ -1,39 +1,43 @@
 package com.gdgcampinas.chat_firebase;
 
-import android.content.Context;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import java.util.List;
 
 /**
  * Created by thales on 2/23/15.
  */
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
-    private List<Chat> mDataset;
-    private SparseBooleanArray selectedItems;
-    private Context mContext;
+    private List<Chat> mDataSet;
     private String mId;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    private static final int CHAT_RIGHT = 1;
+    private static final int CHAT_LEFT = 2;
+
+    /**
+     * Inner Class for a recycler view
+     */
+    public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView mTextView;
-        public CardView mCardView;
 
         public ViewHolder(View v) {
             super(v);
             mTextView = (TextView) itemView.findViewById(R.id.tvMessage);
-            //mCardView = (CardView) itemView.findViewById(R.id.card_view);
         }
     }
 
-    public ChatAdapter(Context context, List<Chat> myDataset, String id) {
-        mContext = context;
-        mDataset = myDataset;
-        selectedItems = new SparseBooleanArray();
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param dataSet Message list
+     * @param id      Device id
+     */
+    public ChatAdapter(List<Chat> dataSet, String id) {
+        mDataSet = dataSet;
         mId = id;
     }
 
@@ -41,40 +45,33 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public ChatAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v;
 
-        if(viewType == 1)
-        {
+        if (viewType == CHAT_RIGHT) {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_chat_right, parent, false);
-        }
-        else
-        {
+        } else {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.list_item_chat_left, parent, false);
         }
 
-        ViewHolder vh = new ViewHolder(v);
-        Integer i = vh.getPosition();
-        v.setTag(vh);
-
-        return vh;
+        return new ViewHolder(v);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(mDataset.get(position).getId().equals(mId))
-            return 1;
+        if (mDataSet.get(position).getId().equals(mId))
+            return CHAT_RIGHT;
 
-        return 2;
+        return CHAT_LEFT;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Chat chat = mDataset.get(position);
+        Chat chat = mDataSet.get(position);
         holder.mTextView.setText(chat.getMessage());
     }
 
     @Override
     public int getItemCount() {
-        return mDataset.size();
+        return mDataSet.size();
     }
 }

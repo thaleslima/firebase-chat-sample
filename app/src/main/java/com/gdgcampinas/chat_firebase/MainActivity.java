@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,13 +14,15 @@ import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.gdgcampinas.chat_firebase.animation.SlideInOutLeftItemAnimator;
 
 import java.util.ArrayList;
 import java.util.List;
-
-
+/**
+ * Main Activity
+ */
 public class MainActivity extends Activity {
+    private static final String TAG = MainActivity.class.getName();
+
     private EditText metText;
     private Button mbtSent;
     private Firebase mFirebaseRef;
@@ -41,12 +44,13 @@ public class MainActivity extends Activity {
 
         mId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setItemAnimator(new SlideInOutLeftItemAnimator(mRecyclerView));
-        mAdapter = new ChatAdapter(this, mChats, mId);
+        //mRecyclerView.setItemAnimator(new SlideInOutLeftItemAnimator(mRecyclerView));
+        mAdapter = new ChatAdapter(mChats, mId);
         mRecyclerView.setAdapter(mAdapter);
 
-
-        //Firebase - Inicia
+        /**
+         * Firebase - Inicialize
+         */
         Firebase.setAndroidContext(this);
         mFirebaseRef = new Firebase("https://chat-dgd.firebaseio.com/").child("chat");
 
@@ -56,9 +60,10 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 String message = metText.getText().toString();
 
-                if(!message.isEmpty()) {
-
-                    //Firebase - Envia mensagem
+                if (!message.isEmpty()) {
+                    /**
+                     * Firebase - Send message
+                     */
                     mFirebaseRef.push().setValue(new Chat(message, mId));
                 }
 
@@ -67,19 +72,23 @@ public class MainActivity extends Activity {
         });
 
 
-        //Firebase - Recebe mensagem
+        /**
+         * Firebase - Receives message
+         */
         mFirebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                if(dataSnapshot != null && dataSnapshot.getValue() != null) {
+                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+                    try{
 
-                    //Firebase - Converte a resposta em um objeto do tipo Chat
-                    Chat model = dataSnapshot.getValue(Chat.class);
+                        Chat model = dataSnapshot.getValue(Chat.class);
 
-
-                    mChats.add(model);
-                    mRecyclerView.scrollToPosition(mChats.size() - 1);
-                    mAdapter.notifyItemInserted(mChats.size() - 1);
+                        mChats.add(model);
+                        mRecyclerView.scrollToPosition(mChats.size() - 1);
+                        mAdapter.notifyItemInserted(mChats.size() - 1);
+                    } catch (Exception ex) {
+                        Log.e(TAG, ex.getMessage());
+                    }
                 }
             }
 

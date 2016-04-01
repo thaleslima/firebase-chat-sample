@@ -1,7 +1,7 @@
 package com.gdgcampinas.chat_firebase;
 
 /**
- * Created by thales on 2/28/15.
+ * Class that represent the message.
  */
 public class Chat {
     private String message;
