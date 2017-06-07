@@ -4,8 +4,8 @@ package com.gdgcampinas.chat_firebase;
  * Class that represent the message.
  */
 public class Chat {
-    private String message;
-    private String id;
+    public String message;
+    public String id;
 
     public Chat() {
     }

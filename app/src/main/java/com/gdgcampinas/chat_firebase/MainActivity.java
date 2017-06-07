@@ -1,5 +1,6 @@
 package com.gdgcampinas.chat_firebase;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -10,28 +11,29 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Main Activity
- */
+
+
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getName();
 
     private EditText metText;
     private Button mbtSent;
-    private Firebase mFirebaseRef;
+    private DatabaseReference mFirebaseRef;
 
     private List<Chat> mChats;
     private RecyclerView mRecyclerView;
     private ChatAdapter mAdapter;
     private String mId;
 
+    @SuppressLint("HardwareIds")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,8 +53,8 @@ public class MainActivity extends Activity {
         /**
          * Firebase - Inicialize
          */
-        Firebase.setAndroidContext(this);
-        mFirebaseRef = new Firebase("https://chat-dgd.firebaseio.com/").child("chat");
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        mFirebaseRef = database.getReference("message");
 
 
         mbtSent.setOnClickListener(new View.OnClickListener() {
@@ -75,11 +77,34 @@ public class MainActivity extends Activity {
         /**
          * Firebase - Receives message
          */
+//        mFirebaseRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                if (dataSnapshot != null && dataSnapshot.getValue() != null) {
+//                    try {
+//
+//                        Chat model = dataSnapshot.getValue(Chat.class);
+//
+//                        mChats.add(model);
+//                        mRecyclerView.scrollToPosition(mChats.size() - 1);
+//                        mAdapter.notifyItemInserted(mChats.size() - 1);
+//                    } catch (Exception ex) {
+//                        Log.e(TAG, ex.getMessage());
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+
         mFirebaseRef.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 if (dataSnapshot != null && dataSnapshot.getValue() != null) {
-                    try{
+                    try {
 
                         Chat model = dataSnapshot.getValue(Chat.class);
 
@@ -108,8 +133,8 @@ public class MainActivity extends Activity {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG, databaseError.getMessage());
             }
         });
     }
